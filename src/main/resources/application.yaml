@@ -1,0 +1,11 @@
+#统一的配置文件
+
+#改变服务器端口
+server:
+  port: 8080
+
+spring:
+  profiles:
+    # 外置jdbc、redis和mail配置文件
+    active: jdbc,redis,mail
+
