@@ -1,4 +1,0 @@
-deploy: 
-type: git
-repository: git@github.com:AnLoner/Anloner.github.io.git
-branch: main
