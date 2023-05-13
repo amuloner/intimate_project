@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.intimate.mapper.ConsultantMapper">
+    <!--
+namespace:名称空间，绑定某个mapper
+id:唯一标识，方法名
+resultType:返回值类型
+#{id}:从传递过来的参数中取出id值
+-->
+    <!--分页|条件 查询所有咨询师数据-->
+<!--    <select id="findByPage" resultType="com.wu.intimate.model.Consultant">-->
+<!--        SELECT u.id,u.nickname,u.gender,u.age,c.name,c.conNum,c.conDate,c.conLikes,c.complaintsNum,c.atcationDate,c.conIntro-->
+<!--        FROM tb_user u-->
+<!--        left join tb_consultant c-->
+<!--        on u.id = c.id-->
+<!--        ${ew.customSqlSegment}-->
+<!--    </select>-->
+
+    <!--分页条件查询 小程序用 需要用户数据、咨询师数据、一条最新的评论-->
+    <select id="findByPage" resultType="java.util.LinkedHashMap">
+        SELECT
+            u.id,
+            u.headImg,
+            u.age,
+            u.address,
+            c.idCard,
+            c.name,
+            c.achieve,
+            c.realm,
+            c.conDate,
+            c.conNum,
+            c.conLikes,
+            c.complaintsNum,
+            c.atcationDate,
+            c.certifiedUrl,
+            (
+                SELECT COUNT(*) FROM tb_evaluate e
+                WHERE u.id = e.toId
+                GROUP BY u.id
+            ) AS evaluateNum,
+            (
+                SELECT e.content FROM tb_evaluate e
+                where e.toId = u.id
+                ORDER BY `date` DESC
+                LIMIT 1
+            ) AS newEvaluate,
+            (
+                SELECT COUNT(*) FROM tb_essay e
+                WHERE u.id = e.authorId
+                GROUP BY u.id
+            ) AS essayNum
+        FROM
+            tb_user u
+        INNER JOIN
+            tb_consultant c
+        ON u.id = c.id
+        ${ew.customSqlSegment}
+    </select>
+
+    <!--根据id查询咨询师所有信息-->
+    <select id="findById" resultType="java.util.LinkedHashMap">
+        SELECT
+            u.*,
+            c.*,
+            (
+                SELECT COUNT(*) FROM tb_evaluate e
+                WHERE u.id = e.toId
+                GROUP BY u.id
+            ) AS evaluateNum,
+            (
+                SELECT e.content FROM tb_evaluate e
+                where e.toId = u.id
+                ORDER BY `date` DESC
+                 LIMIT 1
+            ) AS newEvaluate,
+            (
+                SELECT COUNT(*) FROM tb_essay e
+                WHERE u.id = e.authorId
+                GROUP BY u.id
+            ) AS essayNum
+        FROM
+            tb_user u
+            INNER JOIN
+            tb_consultant c
+        ON u.id = c.id
+        ${ew.customSqlSegment}
+    </select>
+</mapper>

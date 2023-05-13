@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.intimate.mapper.UserMapper">
+    <!--
+namespace:名称空间，绑定某个mapper
+id:唯一标识，方法名
+resultType:返回值类型
+#{id}:从传递过来的参数中取出id值
+-->
+    <!--分页|条件 查询所有咨询师数据-->
+<!--    <select id="findByPage" resultType="com.wu.intimate.model.Consultant">-->
+<!--        SELECT u.id,u.nickname,u.gender,u.age,c.name,c.conNum,c.conDate,c.conLikes,c.complaintsNum,c.atcationDate,c.conIntro-->
+<!--        FROM tb_user u-->
+<!--        left join tb_consultant c-->
+<!--        on u.id = c.id-->
+<!--        ${ew.customSqlSegment}-->
+<!--    </select>-->
+
+    <!--分页条件查询 小程序用 需要用户数据、咨询师数据、一条最新的评论-->
+    <select id="findUser" resultType="java.util.LinkedHashMap">
+        SELECT
+            u.*,
+            (
+                SELECT COUNT(*) FROM tb_orderlist o
+                WHERE o.userId = u.id and o.status = 1
+                GROUP BY u.id
+            ) AS enquNum,
+            (
+                SELECT COUNT(*) FROM tb_test_r t
+                WHERE t.userId = u.id
+                GROUP BY u.id
+            ) AS testNum
+        FROM
+            tb_user u
+        ${ew.customSqlSegment}
+    </select>
+</mapper>

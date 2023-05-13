@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.intimate.mapper.TestRuleMapper">
+    <!--
+namespace:名称空间，绑定某个mapper
+id:唯一标识，方法名
+resultType:返回值类型
+#{id}:从传递过来的参数中取出id值
+-->
+    <!--根据用户id查询预约表及相关咨询师信息-->
+    <select id="findByPage" resultType="java.util.LinkedHashMap">
+        SELECT tru.*,tt.title  FROM `tb_test_rule` tru INNER JOIN tb_test tt ON tru.testId = tt.id
+        ${ew.customSqlSegment}
+    </select>
+</mapper>

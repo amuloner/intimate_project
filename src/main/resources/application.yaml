@@ -2,10 +2,21 @@
 
 #改变服务器端口
 server:
-  port: 8080
+  port: 8082
 
 spring:
   profiles:
     # 外置jdbc、redis和mail配置文件
     active: jdbc,redis,mail
 
+mybatis-plus:
+  #数据库与pojo类字段名相同，关闭驼峰匹配规则
+  configuration.map-underscore-to-camel-case: false
+  configuration:
+    #添加日志支持
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+#资源请求路径
+#img_url: "http://192.168.43.215:8082"
+img_url: "http://192.168.174.205:8082"
